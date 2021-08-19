@@ -7,7 +7,8 @@ metadata:
   namespace: web
 spec:
   rules:
-  - http:
+  - host: 254bd7497bc346ab832b.westus.aksapp.io
+    http:
       paths:
       - backend:
           serviceName: tripviewer
