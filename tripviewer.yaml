@@ -1,1 +1,41 @@
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripviewer
+  namespace: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripviewer
+  template:
+    metadata:
+      labels:
+        app: tripviewer
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: tripviewer
+        image: registryrhx6769.azurecr.io/tripviewer:1.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: USERPROFILE_API_ENDPOINT
+          value: "http://userprofile.default.svc.cluster.local:80"
+        - name: TRIPS_API_ENDPOINT
+          value: "http://trips.default.svc.cluster.local:80"
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "development"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tripviewer
+  namespace: web
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: tripviewer
